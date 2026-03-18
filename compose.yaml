@@ -1,0 +1,10 @@
+services:
+  app:
+    build: .            # This tells Docker to use the Dockerfile in the current folder
+    image: analytics-api # Names the image
+    environment:
+      - PORT=8002
+    env_file:
+      - .env
+    ports:
+      - "8002:8002"

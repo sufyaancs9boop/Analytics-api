@@ -1,3 +1,12 @@
+# 1 - Download & Install Python 3
+FROM python:3.13.2-slim-bullseye
+
+# setup linux os packages
+
+# 2 - Create Virtual Environment
+# 3 - Install Python Packages - `pip install <package-name>`
+# 4 - FastAPI Hello World
+
 # 1. Create the venv
 RUN python -m venv /opt/venv
 
@@ -32,10 +41,10 @@ WORKDIR /code
 COPY requirements.txt /code/requirements.txt
 
 #Copy the project code into the container's working directory
-COPY ./src/code
+COPY ./src /code/src
 
 # Install the Python project requirements
-RUN pip install -r /tmp/requirements.txt|
+RUN pip install -r /code/requirements.txt
 
 # make the bash script executable
 COPY ./boot/docker-run.sh /opt/run.sh

@@ -1,0 +1,9 @@
+{
+  "venvPath": ".",
+  "venv": "venv",
+  "pythonVersion": "3.10",
+  "pythonPlatform": "Windows",
+  "include": ["src"],
+  "exclude": ["**/node_modules", "**/__pycache__"]
+}
+
