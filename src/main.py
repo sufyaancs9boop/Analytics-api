@@ -1,12 +1,14 @@
 from dotenv import load_dotenv
 load_dotenv()
-
+import logging
 from contextlib import asynccontextmanager
 from typing import Union
 from fastapi import FastAPI, Depends
 from pydantic import BaseModel
 from api.events.routing import router as event_router
 from api.db.sessions import init_db
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -19,7 +21,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(event_router, prefix= '/api/events')
 
-
+logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
 
 @app.get("/")
 def read_root():
