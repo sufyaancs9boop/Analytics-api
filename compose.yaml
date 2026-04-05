@@ -1,10 +1,46 @@
 services:
   app:
-    build: .    
+    build: .
     container_name: analytics-api
     environment:
-      - PORT=8000
+      - PYTHONPATH=/code/src
+      #- PORT=8000
+      #- DATABASE_URL=postgresql+psycopg2://time-user:pw@db_service:5432/timescaledb
+
+    working_dir: /code
     env_file:
       - .env
     ports:
       - "8000:8000"
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - ./src:/code/src
+    depends_on:
+      db_service:
+        condition: service_healthy 
+    develop:
+      watch:
+        - action: rebuild
+          path: Dockerfile
+        - action: rebuild
+          path: requirements.txt
+        - action: rebuild
+          path: compose.yaml
+
+  db_service:
+    image: timescale/timescaledb:latest-pg17
+    environment:
+      POSTGRES_USER: time-user
+      POSTGRES_PASSWORD: pw
+      POSTGRES_DB: timescaledb
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U time-user -d timescaledb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+volumes:
+  timescaledb_data:

@@ -1,11 +1,25 @@
+from dotenv import load_dotenv
+load_dotenv()
+
+from contextlib import asynccontextmanager
 from typing import Union
 from fastapi import FastAPI, Depends
 from pydantic import BaseModel
 from api.events.routing import router as event_router
+from api.db.sessions import init_db
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Perform any startup tasks here
+    init_db()
+    print("Starting up the application...")
+    yield
+    # Perform any shutdown tasks here
+    print("Shutting down the application...")
+app = FastAPI(lifespan=lifespan)
 app.include_router(event_router, prefix= '/api/events')
- 
+
+
 
 @app.get("/")
 def read_root():

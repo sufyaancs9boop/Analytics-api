@@ -7,4 +7,4 @@ RUN_PORT=${PORT:-8000}
 RUN_HOST=${HOST:-0.0.0.0}
 export PYTHONPATH=/code/src
 
-gunicorn -k uvicorn.workers.UvicornWorker -b $RUN_HOST:$RUN_PORT src.main:app
+gunicorn -k uvicorn.workers.UvicornWorker -b $RUN_HOST:$RUN_PORT src.main:app --reload
